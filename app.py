@@ -1,27 +1,38 @@
 from dash import Dash, dcc, html, Input, Output
 import plotly.express as px
+import plotly.graph_objects as go
 import pandas as pd
 
-# โหลดไฟล์จากโฟลเดอร์เดียวกัน
-df = pd.read_csv("superstore.csv")
-df['Order Date'] = pd.to_datetime(df['Order Date'])
+# โหลด Dataset
+df = pd.read_csv("nvidia_stock.csv")
+df["Date"] = pd.to_datetime(df["Date"])
 
 app = Dash(__name__)
-app.title = "Sales Dashboard"
+app.title = "NVIDIA Dashboard"
 
 app.layout = html.Div([
-    html.H1("📊 Global Sales Dashboard", style={'textAlign': 'center'}),
+
+    html.H1("📈 NVIDIA Stock Dashboard", style={"textAlign": "center"}),
 
     html.Div([
+        dcc.DatePickerRange(
+            id="date-picker",
+            start_date=df["Date"].min(),
+            end_date=df["Date"].max()
+        ),
+
         dcc.Dropdown(
-            id='region-dropdown',
-            options=[{'label': r, 'value': r} for r in df['Region'].unique()],
-            value=df['Region'].unique()[0],
-            placeholder="Select Region"
-        ),
-         dcc.Dropdown(
-            id='category-dropdown',
-            options=[{'label': c, 'value': c} for c in df['Category'].unique()],
-            value=df['Category'].unique()[0],
-            placeholder="Select Category"
-        ),
+            id="ma-dropdown",
+            options=[
+                {"label": "MA 3", "value": 3},
+                {"label": "MA 5", "value": 5}
+            ],
+            value=3
+        )
+    ], style={"width": "50%", "margin": "auto"}),
+
+    dcc.Graph(id="price-chart"),
+    dcc.Graph(id="volume-chart"),
+    dcc.Graph(id="ma-chart")
+
+])
