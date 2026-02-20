@@ -19,3 +19,9 @@ app.layout = html.Div([
             value=df['Region'].unique()[0],
             placeholder="Select Region"
         ),
+         dcc.Dropdown(
+            id='category-dropdown',
+            options=[{'label': c, 'value': c} for c in df['Category'].unique()],
+            value=df['Category'].unique()[0],
+            placeholder="Select Category"
+        ),
