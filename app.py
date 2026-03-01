@@ -59,3 +59,27 @@ app.layout = html.Div([
     Input("ma-dropdown", "value")
 )
 def update_dashboard(start_date, end_date, ma_value):
+
+    start_date = pd.to_datetime(start_date)
+    end_date = pd.to_datetime(end_date)
+
+    filtered_df = df[
+        (df["Date"] >= start_date) &
+        (df["Date"] <= end_date)
+    ].copy()
+
+    # กราฟ 1: ราคาปิด
+    fig1 = px.line(filtered_df, x="Date", y="Close",
+                   title="Closing Price")
+
+    # กราฟ 2: Volume
+    fig2 = px.bar(filtered_df, x="Date", y="Volume",
+                  title="Trading Volume")
+
+    # กราฟ 3: Moving Average
+    filtered_df["MA"] = filtered_df["Close"].rolling(ma_value).mean()
+
+    fig3 = px.line(filtered_df, x="Date", y=["Close", "MA"],
+                   title="Moving Average")
+
+    return fig1, fig2, fig3
