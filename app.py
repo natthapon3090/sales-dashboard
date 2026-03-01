@@ -45,3 +45,17 @@ app.layout = html.Div([
     dcc.Graph(id="ma-chart")
 
 ])
+
+# ===============================
+# CALLBACK
+# ===============================
+
+@app.callback(
+    Output("price-chart", "figure"),
+    Output("volume-chart", "figure"),
+    Output("ma-chart", "figure"),
+    Input("date-picker", "start_date"),
+    Input("date-picker", "end_date"),
+    Input("ma-dropdown", "value")
+)
+def update_dashboard(start_date, end_date, ma_value):
